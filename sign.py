@@ -8,6 +8,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("-i", type=str, help="Input file path")
 ap.add_argument("-o", type=str, help="Output file path")
 ap.add_argument("-k", type=str, default='', help="Public key output path")
+ap.add_argument("-r", type=str, default='', help="Private key output path")
 ap.add_argument("-d", type=str, default='0', help="Private key")
 ap.add_argument("-p", type=int, default=57896044618658097711785492504343953926634992332820282019728792003956564821041,
                 help="Characteristic of the underlying prime field")
@@ -26,7 +27,11 @@ args = vars(ap.parse_args())
 
 if args["d"] == '0':
     private_key_raw = urandom(64)
-    print(f"Private key is: {hexenc(private_key_raw)}")
+    prv_key_hex = hexenc(private_key_raw)
+    print(f"Private key is: {prv_key_hex}")
+    if args["r"] != '':
+        with open(args["r"], "w") as pk:
+            pk.write(prv_key_hex)
     args["d"] = prv_unmarshal(private_key_raw)
 else:
     args["d"] = prv_unmarshal(hexdec(args["d"]))
