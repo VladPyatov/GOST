@@ -7,6 +7,7 @@ from os import urandom
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", type=str, help="Input file path")
 ap.add_argument("-o", type=str, help="Output file path")
+ap.add_argument("-k", type=str, default='', help="Public key output path")
 ap.add_argument("-d", type=str, default='0', help="Private key")
 ap.add_argument("-p", type=int, default=57896044618658097711785492504343953926634992332820282019728792003956564821041,
                 help="Characteristic of the underlying prime field")
@@ -34,7 +35,12 @@ curve = Curve(p=args["p"], q=args["q"], a=args["a"], b=args["b"], x=args["x"], y
 sha = SHA256()
 
 pub = public_key(curve, args["d"])
-print(f"Public key is: {hexenc(pub_marshal(pub))}")
+pub_key_hex = hexenc(pub_marshal(pub))
+print(f"Public key is: {pub_key_hex}")
+
+if args["k"] != '':
+    with open(args["k"], "w") as pk:
+        pk.write(pub_key_hex)
 
 with open(args["i"], "rb") as file:
     sha.update(file.read())
