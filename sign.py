@@ -26,9 +26,11 @@ ap.add_argument("-y", type=int, default=4018974056539037503335449422937059775635
 args = vars(ap.parse_args())
 
 if args["d"] == '0':
+    # generate private key
     private_key_raw = urandom(64)
     prv_key_hex = hexenc(private_key_raw)
     print(f"Private key is: {prv_key_hex}")
+    # write private key to the output file
     if args["r"] != '':
         with open(args["r"], "w") as pk:
             pk.write(prv_key_hex)
@@ -36,22 +38,28 @@ if args["d"] == '0':
 else:
     args["d"] = prv_unmarshal(hexdec(args["d"]))
 
+# initialize curve and sha256 objects
 curve = Curve(p=args["p"], q=args["q"], a=args["a"], b=args["b"], x=args["x"], y=args["y"])
 sha = SHA256()
 
+# generate public key
 pub = public_key(curve, args["d"])
 pub_key_hex = hexenc(pub_marshal(pub))
 print(f"Public key is: {pub_key_hex}")
 
+# write public key to the output file
 if args["k"] != '':
     with open(args["k"], "w") as pk:
         pk.write(pub_key_hex)
 
+# generate hash
 with open(args["i"], "rb") as file:
     sha.update(file.read())
 
+# sign input file
 signature = sign(curve, args["d"], sha.digest())
 
+# siave signature
 with open(args["o"], "w") as signature_file:
     signature_file.write(hexenc(signature))
 

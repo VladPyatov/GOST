@@ -23,16 +23,19 @@ ap.add_argument("-y", type=int, default=4018974056539037503335449422937059775635
 
 args = vars(ap.parse_args())
 
+# initialize sha256 and curve objects
+sha = SHA256()
 curve = Curve(p=args["p"], q=args["q"], a=args["a"], b=args["b"], x=args["x"], y=args["y"])
 
-file = open(args["i"], "rb").read()
+# compute hash of the input file
+with open(args["i"], "rb") as file:
+    sha.update(file.read())
 
-sha = SHA256()
-sha.update(file)
-
+# read signature
 with open(args["s"], "r") as s:
     signature = hexdec(s.read())
-
+    
+# perform verification
 if verify(curve, pub_unmarshal(hexdec(args["d"])), sha.digest(), signature):
     print("Signature verified!")
 else:
