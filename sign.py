@@ -7,6 +7,7 @@ from os import urandom
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", type=str, help="Input file path")
 ap.add_argument("-o", type=str, help="Output file path")
+ap.add_argument("-d", type=str, default='0', help="Private key")
 ap.add_argument("-p", type=int, default=57896044618658097711785492504343953926634992332820282019728792003956564821041,
                 help="Characteristic of the underlying prime field")
 ap.add_argument("-q", type=int, default=57896044618658097711785492504343953927082934583725450622380973592137631069619,
@@ -17,9 +18,8 @@ ap.add_argument("-b", type=int, default=4330887654676727690576590459565093199594
 ap.add_argument("-x", type=int, default=2, help="x coordinate of the point P (generator of the subgroup of order q) "
                                                 "of the elliptic curve in the canonical form")
 ap.add_argument("-y", type=int, default=4018974056539037503335449422937059775635739389905545080690979365213431566280,
-                help="x coordinate of the point P (generator of the subgroup of order q) of the elliptic curve"
+                help="y coordinate of the point P (generator of the subgroup of order q) of the elliptic curve"
                      " in the canonical form")
-ap.add_argument("-d", type=str, default='0', help="Private key")
 
 args = vars(ap.parse_args())
 
